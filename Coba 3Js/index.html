@@ -4,14 +4,24 @@
     <title>Three Js</title>
     <script src="js/three.min.js"></script>
     <style>
-        h1, h2{
+        h1, h2, .container{
             text-align: center;
+            align-items: center;
         }
     </style>
 </head>
 <body>
     <h1>Geometry, Material, Lightning in 3js</h1>
     <h2>Muhammad Farhan Haykal-05111940000141</h2>
+    <div class="container">
+        <select name="light" id="light">
+            <option value="0">Ambient Light</option>
+            <option value="1">Hemisphere Light</option>
+            <option value="2">Directional Light</option>
+            <option value="3">Point Light</option>
+            <option value="4">Spotlight</option>
+        </select>
+    </div>
 </body>
 </html>
 
@@ -19,14 +29,6 @@
         
         let scene, camera, renderer;
         let cube;
-    
-            const ambientLight = new THREE.AmbientLight( 0x404040 );
-            const hemmisphereLight = new THREE.HemisphereLight(0x404040, 0xFFFFFF, 0.5);
-            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-            const pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
-            pointLight.position.set( 50, 50, 50 );
-            const spotLight = new THREE.SpotLight(0xffffff);
-            spotLight.position.set(50, 50, 50);
             // scene.add(spotLight);
         let createCube = function(){
             let geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
@@ -36,7 +38,7 @@
             cube.position.x += 0;
             cube.position.y += 2;
             scene.add(cube);
-            scene.add(spotLight);
+            // scene.add(spotLight);
         }
         let sph;
         let createSph = function(){
@@ -126,22 +128,49 @@
             renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
 
+            //5. Lightning
+            const ambientLight = new THREE.AmbientLight( 0x404040 );
+            
+            const hemmisphereLight = new THREE.HemisphereLight(0x404040, 0xFFFFFF, 1);
+            
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+            
+            const pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+            pointLight.position.set( 10, 10, 10 );
+            
+            const spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(10, 10, 10);
+            
+            const lights=[ambientLight, hemmisphereLight, directionalLight, pointLight, spotLight];
+            lights.forEach((obj) => scene.add(obj));
+            lights.forEach((light) => {light.visible = false});
+            lights[0].visible = true;
+
+            const selectedLight = document.getElementById('light');
+            selectedLight.addEventListener('change', (e) => {
+                const selected = e.target.value;
+                lights.forEach((light) => {light.visible = false});
+                lights[selected].visible = true;
+            });
             document.body.appendChild(renderer.domElement);
         };
       
         
         // main animation loop - calls 50-60 in a second.
         let mainLoop = function() {
-            // cube.rotation.x+=0.01;
-            // sph.rotation.x+=0.01;
+            cube.rotation.x+=0.01;
+            sph.rotation.x+=0.01;
             sph.rotation.y+=0.01;
             // cone.rotation.x+=0.01;
             cone.rotation.x+=0.01;
-            // cone.rotation.z+=0.01;
+            cone.rotation.y+=0.01;
             cube.rotation.y+=0.01;
+            torus.rotation.x+=0.01;
             torus.rotation.y+=0.01;
+            torusK.rotation.y+=0.01
             torusK.rotation.x+=0.01;
             cylinder.rotation.x+=0.01;
+            cylinder.rotation.y+=0.01;
             renderer.render(scene, camera);
             requestAnimationFrame(mainLoop);
         };
