@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <script src="js/three.min.js"></script>
+    <style>
+        h1, h2{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Geometry, Material, Lightning in 3js</h1>
+    <h2>Muhammad Farhan Haykal-05111940000141</h2>
+</body>
+</html>
+
+<script>
+        
+        let scene, camera, renderer;
+        let cube;
+    
+            const ambientLight = new THREE.AmbientLight( 0x404040 );
+            const hemmisphereLight = new THREE.HemisphereLight(0x404040, 0xFFFFFF, 0.5);
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            const pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+            pointLight.position.set( 50, 50, 50 );
+            const spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(50, 50, 50);
+            // scene.add(spotLight);
+        let createCube = function(){
+            let geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+            let material = new THREE.MeshLambertMaterial({color: 0x00a1cb, wireframe : false});
+            cube = new THREE.Mesh(geometry, material);
+            // cube.material.wireframe = true;
+            cube.position.x += 0;
+            cube.position.y += 2;
+            scene.add(cube);
+            scene.add(spotLight);
+        }
+        let sph;
+        let createSph = function(){
+            const geometry = new THREE.SphereGeometry(1, 16, 8);
+            const material = new THREE.MeshPhongMaterial({color:0xffff00, wireframe : true});
+            sph = new THREE.Mesh(geometry, material);
+
+            // sph.material.wireframe = true;
+            sph.position.x += 0;
+            sph.position.y += -2;
+            scene.add(sph);
+            // scene.add(spotLight);
+        }
+        let cone;
+        let createCone = function(){
+            const geometry = new THREE.ConeGeometry(0.5, 2, 12);
+            const material = new THREE.MeshPhongMaterial({color:0x76ee00, wireframe : false});
+            cone = new THREE.Mesh(geometry, material);
+            // cone.material.wireframe = true;
+            cone.position.x += -4;
+            cone.position.y += 2;
+            scene.add(cone);
+            // scene.add(ambientLight);
+        }
+
+        let torus;
+        let createTorus = function(){
+            const geometry = new THREE.TorusGeometry(0.5, 0.25, 14, 42);
+            const material = new THREE.MeshMatcapMaterial({color:0xffd700});
+            torus = new THREE.Mesh(geometry, material);
+            // cone.material.wireframe = true;
+            torus.position.x += -4;
+            torus.position.y += -2;
+            scene.add(torus);
+            // scene.add(hemmisphereLight);
+        }
+
+        let torusK;
+        let createTorusK = function(){
+            const geometry = new THREE.TorusKnotGeometry(  0.5, 0.25, 100, 16 );
+            const material = new THREE.MeshToonMaterial( { color: 0x7a7a7a, wireframe: true } );
+            torusK = new THREE.Mesh( geometry, material );
+            // scene.add( torusKnot );
+            // cone.material.wireframe = true;
+            torusK.position.x += 4;
+            torusK.position.y += -2;
+            scene.add(torusK);
+            // scene.add(directionalLight);
+        }
+
+        let createCylinder = function() {
+            const geometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 100);
+            const material = new THREE.MeshNormalMaterial({wireframe: false});
+            cylinder = new THREE.Mesh(geometry, material);
+            cylinder.position.x += 4;
+            cylinder.position.y += 2;
+            scene.add(cylinder);
+            // scene.add(spotLight);
+        };
+        const sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+        }
+        // set up the environment - 
+        // initiallize scene, camera, objects and renderer
+        let init = function() {
+            // 1. create the scene
+            // ...
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x4b0082);
+            // 2. create an locate the camera       
+            // ...
+            camera = new THREE.PerspectiveCamera(75,
+                    window.innerWidth / window.innerHeight,
+                    0.1, 1000);
+            camera.position.z = 5;
+            // 3. create an locate the object on the scene           
+            // ...
+            createCube();
+            createSph();
+            createCone();
+            createTorus();
+            createTorusK();
+            createCylinder();
+            // 4. create the renderer     
+            // ...
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            document.body.appendChild(renderer.domElement);
+        };
+      
+        
+        // main animation loop - calls 50-60 in a second.
+        let mainLoop = function() {
+            // cube.rotation.x+=0.01;
+            // sph.rotation.x+=0.01;
+            sph.rotation.y+=0.01;
+            // cone.rotation.x+=0.01;
+            cone.rotation.x+=0.01;
+            // cone.rotation.z+=0.01;
+            cube.rotation.y+=0.01;
+            torus.rotation.y+=0.01;
+            torusK.rotation.x+=0.01;
+            cylinder.rotation.x+=0.01;
+            renderer.render(scene, camera);
+            requestAnimationFrame(mainLoop);
+        };
+        
+        ///////////////////////////////////////////////
+        init();
+        mainLoop();
+</script>
+    
