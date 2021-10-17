@@ -4,11 +4,11 @@
 Preview Tugas Geometry, Material, Lightning in Three Js dapat dilihat pada link berikut ini :
 https://cg2021a.github.io/tugas-1-neroSpace/Coba%203Js/
 
-Preview untuk Tugas User Interaction in Three Js dapat dilihat pada link beirkut ini :
+Preview untuk Tugas User Interaction in Three Js dapat dilihat pada link berikut ini :
 https://cg2021a.github.io/tugas-1-neroSpace/3Js-UserInteraction/
 
 
-# Hasil Tampilan Web GL :
+# Hasil Tampilan Tugas Web GL :
 ![Bukti](https://user-images.githubusercontent.com/70801807/136050882-bff95d86-8aaa-4470-ace2-4ed1374d4164.PNG)
 
 # Gambar yang dipakai:
