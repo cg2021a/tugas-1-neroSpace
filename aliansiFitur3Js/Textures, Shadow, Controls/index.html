@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Controls, Texture, & Shadow</title>
+    <script src = "js/three.min.js"></script>    
+	<script src = "js/controls/OrbitControls.js"></script>   
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+
+	let scene, camera, renderer, cube,  spotLight, plane;
+	let player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02 };
+    let ADD = 0.01, theta = 0;	
+
+	let createGeometry = function() {
+		texture = new THREE.TextureLoader().load( 'img/rub1k.jpg');
+        let geometry = new THREE.BoxGeometry(1,1,1);
+        let material = new THREE.MeshPhongMaterial({color:0xff4444,
+			shininess: -10, map: texture, side: THREE.DoubleSide});
+        cube = new THREE.Mesh(geometry, material);
+        cube.position.set(0,1,-1);
+        cube.castShadow = true;
+        cube.receiveShadow = false;		
+		scene.add(cube);
+	
+		texturei = new THREE.TextureLoader().load( 'img/dgBalls.jpg');
+		let geometryi = new THREE.SphereGeometry(0.8, 100, 50);
+        let materiali = new THREE.MeshPhongMaterial({color:0Xffffff,
+		    shininess: 100, map: texturei, side: THREE.DoubleSide});
+        sph = new THREE.Mesh(geometryi, materiali);
+
+            // sph.material.wireframe = true;
+        sph.position.set(-2,1,2);
+        sph.castShadow = true;
+        sph.receiveShadow = false;	
+        scene.add(sph);
+
+        textureii = new THREE.TextureLoader().load( 'img/tree.jpg');
+            let geometryii = new THREE.ConeGeometry(0.5, 2, 64);
+            let materialii = new THREE.MeshPhongMaterial({color:0Xaaaaaa,
+				map: textureii});
+            cone = new THREE.Mesh(geometryii, materialii);
+            // cone.material.wireframe = true;
+			cone.castShadow = true;
+            cone.receiveShadow = false;
+            cone.position.set(2,1,2);
+            scene.add(cone);
+            // scene.add(ambientLight);
+
+		geometry = 	new THREE.PlaneGeometry(10,10, 10,10);
+		material = new THREE.MeshPhongMaterial({color:0Xaaaaaa});
+		plane = new THREE.Mesh(geometry, material);
+		plane.rotation.x -= Math.PI / 2;
+		plane.receiveShadow = true;
+		scene.add(plane);		
+
+	}
+
+	let init = function() {
+		scene = new THREE.Scene();
+		camera = new THREE.PerspectiveCamera(90, 1280/720, 0.1, 1000);
+
+		// LIGHTS
+		ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+		scene.add(ambientLight);
+		
+		light = new THREE.PointLight( 0xffffff, 1, 100 );
+		light.position.set(-3,6,-3);
+		light.castShadow = true;
+		// Will not light anything closer than 0.1 units or further than 25 units
+		light.shadow.camera.near = 0.1;
+		light.shadow.camera.far = 25;
+		scene.add(light);
+		
+		createGeometry();
+
+		camera.position.set(0, player.height, -5);
+		camera.lookAt(new THREE.Vector3(0,player.height,0));
+		
+		renderer = new THREE.WebGLRenderer(); 
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
+		
+		document.body.appendChild(renderer.domElement);
+	    
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.listenToKeyEvents( window ); // optional
+
+        //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+
+        controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+        controls.dampingFactor = 0.05;
+
+        //controls.autoRotate = true;
+
+        controls.screenSpacePanning = false;
+        
+	}
+
+	    // main animation loop - calls 50-60 times per second.
+	let mainLoop = function() {
+		
+	
+        cube.rotation.x += ADD;
+        cube.rotation.y += ADD;	
+		sph.rotation.x += ADD;	
+		sph.rotation.y += ADD;	
+		// cone.rotation.x += ADD;	
+		cone.rotation.y += ADD;
+		controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(mainLoop);
+    };
+
+    init();
+    mainLoop();
+    
+</script>
